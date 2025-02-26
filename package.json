@@ -1,0 +1,14 @@
+{
+    "name": "sim800c-backend",
+    "version": "1.0.0",
+    "description": "Backend para conectar SIM800C con Firebase",
+    "main": "index.js",
+    "scripts": {
+      "start": "node index.js"
+    },
+    "dependencies": {
+      "express": "^4.18.2",
+      "axios": "^1.3.4"
+    }
+  }
+  
