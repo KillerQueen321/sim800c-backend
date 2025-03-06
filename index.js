@@ -32,7 +32,7 @@ app.post('/actualizar', async (req, res) => {
 });
 
 // ✅ Puerto en el que se ejecutará el servidor
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en el puerto ${PORT}`);
 });
