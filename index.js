@@ -1,7 +1,10 @@
 const express = require('express');
 const axios = require('axios');
+const cors = require('cors'); // ✅ Importamos cors
+
 const app = express();
 
+app.use(cors()); // ✅ Habilitamos CORS para evitar bloqueos
 app.use(express.json());
 
 // 🔹 URL de Firebase Realtime Database
@@ -9,24 +12,27 @@ const FIREBASE_URL = 'https://seguramente-ebe0d-default-rtdb.firebaseio.com/vehi
 
 // ✅ Ruta para recibir datos desde el SIM800C y enviarlos a Firebase
 app.post('/actualizar', async (req, res) => {
-    console.log("🔹 Recibida solicitud en /actualizar:", req.body); // 🔴 Agregamos este log
+    console.log("🔹 Recibida solicitud en /actualizar:", req.body);
 
-    const data = req.body;
+    if (!req.body || Object.keys(req.body).length === 0) {
+        console.error("❌ Error: No se enviaron datos en la solicitud.");
+        return res.status(400).send({ message: 'Solicitud vacía' });
+    }
 
     try {
-        const response = await axios.patch(FIREBASE_URL, data);
-        console.log("✅ Datos enviados a Firebase:", response.data);
+        console.log("📡 Enviando datos a Firebase:", req.body);
+        const response = await axios.patch(FIREBASE_URL, req.body);
+        console.log("✅ Respuesta de Firebase:", response.data);
 
         res.status(200).send({
             message: 'Datos actualizados en Firebase',
             firebase_response: response.data
         });
     } catch (error) {
-        console.error("❌ Error al enviar datos a Firebase:", error.response ? error.response.data : error.message);
-
+        console.error("❌ Error al enviar a Firebase:", error.message);
         res.status(500).send({
             message: 'Error al actualizar Firebase',
-            error: error.response ? error.response.data : error.message
+            error: error.message
         });
     }
 });
